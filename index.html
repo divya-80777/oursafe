@@ -1,0 +1,102 @@
+ <!DOCTYPE html>
+<html>
+<head>
+  <title>Our Safe Space</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f2f2f2;
+      padding: 20px;
+    }
+    .box {
+      background: white;
+      padding: 20px;
+      border-radius: 6px;
+      max-width: 500px;
+      margin: auto;
+    }
+    textarea, input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+    }
+    button {
+      padding: 10px;
+      margin-top: 10px;
+      width: 100%;
+    }
+    .hidden {
+      display: none;
+    }
+    .message {
+      background: #eef;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box" id="loginBox">
+  <h2>Private Login</h2>
+  <input type="password" id="password" placeholder="Enter shared password">
+  <button onclick="login()">Enter</button>
+</div>
+
+<div class="box hidden" id="mainBox">
+  <h2>Write calmly during a fight</h2>
+  <textarea id="fightText" placeholder="I feel hurt because..."></textarea>
+  <button onclick="saveFight()">Save Message</button>
+
+  <div id="fightMessages"></div>
+
+  <hr>
+
+  <h3>Reassurance for tough moments</h3>
+  <p>You are loved. This fight does not define your relationship.</p>
+  <p>Both of you are learning, not failing.</p>
+</div>
+
+<script>
+  const correctPassword = 6Dec2021;
+
+  function login() {
+    const entered = document.getElementById("password").value;
+    if (entered === correctPassword) {
+      document.getElementById("loginBox").classList.add("hidden");
+      document.getElementById("mainBox").classList.remove("hidden");
+      loadFights();
+    } else {
+      alert("Wrong password");
+    }
+  }
+
+  function saveFight() {
+    const text = document.getElementById("fightText").value;
+    if (text.trim() === "") return;
+
+    let fights = JSON.parse(localStorage.getItem("fights")) || [];
+    fights.push(text);
+    localStorage.setItem("fights", JSON.stringify(fights));
+
+    document.getElementById("fightText").value = "";
+    loadFights();
+  }
+
+  function loadFights() {
+    let fights = JSON.parse(localStorage.getItem("fights")) || [];
+    const container = document.getElementById("fightMessages");
+    container.innerHTML = "";
+
+    fights.forEach(msg => {
+      const div = document.createElement("div");
+      div.className = "message";
+      div.innerText = msg;
+      container.appendChild(div);
+    });
+  }
+</script>
+
+</body>
+</html>
